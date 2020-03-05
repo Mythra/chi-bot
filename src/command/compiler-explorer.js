@@ -412,13 +412,13 @@ class CompilerExplorerCommand {
     const supportedLanguagesKey = Object.keys(this.languagesSupported);
     for (let idx = 0; idx < supportedLanguagesKey.length; ++idx) {
       const supportedKey = supportedLanguagesKey[idx];
-      if (codeContent.startsWith(supportedKey)) {
+      if (codeContent.toLowerCase().startsWith(supportedKey)) {
         startsWithLanguageTag = true;
         break;
       }
       if (supportedKey == 'c++') {
         // Special Case 'cpp'
-        if (codeContent.startsWith('cpp')) {
+        if (codeContent.toLowerCase().startsWith('cpp')) {
           startsWithLanguageTag = true;
           break;
         }
