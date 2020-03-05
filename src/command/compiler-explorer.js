@@ -233,7 +233,9 @@ class CompilerExplorerCommand {
       for (let idx = 0; idx < stderrObjects.length; ++idx) {
         const obj = stderrObjects[idx];
         if ('tag' in obj) {
-          taggedString += `Tagged Important Line: ${obj.tag}\n`;
+          if ('text' in obj.tag) {
+            taggedString += `Tagged Important Line: ${obj.tag.text}\n`;
+          }
         }
         if ('text' in obj) {
           stdoutString += obj.text;
