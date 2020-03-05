@@ -1,0 +1,32 @@
+{
+  "name": "chi-bot",
+  "main": "src/bot.js",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Discord bot that reaches out to godbolt.org to perform compilations.",
+  "scripts": {
+    "lint": "npm run lint:prettier && npm run lint:eslint",
+    "lint:prettier": "prettier --single-quote --print-width 79 --trailing-comma all --quote-props consistent --check './**/*.js'",
+    "lint:eslint": "eslint './**/*.js'",
+    "format": "prettier --single-quote --print-width 79 --trailing-comma all --quote-props consistent --write './**/*.js'",
+    "start": "./src/bot.js"
+  },
+  "author": "Cynthia <cynthia@coan.dev>",
+  "license": "MIT",
+  "dependencies": {
+    "@textlint/markdown-to-ast": "^6.1.7",
+    "axios": "^0.19.2",
+    "bufferutil": "^4.0.1",
+    "discord.js": "^12.0.1",
+    "erlpack": "github:discordapp/erlpack",
+    "sodium": "^3.0.2",
+    "utf-8-validate": "^5.0.2",
+    "yargs-parser": "^18.0.0",
+    "zlib-sync": "^0.1.6"
+  },
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-google": "^0.14.0",
+    "prettier": "1.19.1"
+  }
+}
