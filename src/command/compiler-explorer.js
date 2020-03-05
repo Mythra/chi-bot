@@ -407,8 +407,31 @@ class CompilerExplorerCommand {
       msgContent.indexOf('```') + 3,
       msgContent.lastIndexOf('```'),
     );
-    const codeAst = parseMarkdown('code\n```\n' + codeContent + '\n```')
-      .children[1];
+
+    let startsWithLanguageTag = false;
+    const supportedLanguagesKey = Object.keys(this.languagesSupported);
+    for (let idx = 0; idx < supportedLanguagesKey.length; ++idx) {
+      const supportedKey = supportedLanguagesKey[idx];
+      if (codeContent.startsWith(supportedKey)) {
+        startsWithLanguageTag = true;
+        break;
+      }
+      if (supportedKey == 'c++') {
+        // Special Case 'cpp'
+        if (codeContent.startsWith('cpp')) {
+          startsWithLanguageTag = true;
+          break;
+        }
+      }
+    }
+
+    let codeAst = null;
+    if (startsWithLanguageTag) {
+      codeAst = parseMarkdown('code\n```' + codeContent + '\n```').children[1];
+    } else {
+      codeAst = parseMarkdown('code\n```\n' + codeContent + '\n```')
+        .children[1];
+    }
     // Extracted code block.
 
     const args = this._extractRawArgs(
