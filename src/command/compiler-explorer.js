@@ -203,6 +203,78 @@ class CompilerExplorerCommand {
   }
 
   /**
+   * Send a compiler error message.
+   *
+   * @param {Discord.Message} msg
+   *  The discord message object.
+   * @param {Object} compilerData
+   *  The compiler data message.
+   */
+  _sendCompilerError(msg, compilerData) {
+    let stdoutString = '';
+    let stderrString = '';
+    let taggedString = '';
+
+    if ('stdout' in compilerData) {
+      const stdoutObjects = compilerData['stdout'];
+      for (let idx = 0; idx < stdoutObjects.length; ++idx) {
+        const obj = stdoutObjects[idx];
+        if ('tag' in obj) {
+          taggedString += `Tagged Important Line: ${obj.tag}\n`;
+        }
+        if ('text' in obj) {
+          stdoutString += obj.text;
+          stdoutString += '\n';
+        }
+      }
+    }
+    if ('stderr' in compilerData) {
+      const stderrObjects = compilerData['stderr'];
+      for (let idx = 0; idx < stderrObjects.length; ++idx) {
+        const obj = stderrObjects[idx];
+        if ('tag' in obj) {
+          taggedString += `Tagged Important Line: ${obj.tag}\n`;
+        }
+        if ('text' in obj) {
+          stdoutString += obj.text;
+          stdoutString += '\n';
+        }
+      }
+    }
+
+    stdoutString = stdoutString.trim();
+    stderrString = stderrString.trim();
+    taggedString = taggedString.trim();
+
+    const attachments = [];
+    if (stdoutString != '') {
+      attachments.push(
+        new discord.MessageAttachment(
+          Buffer.from(stdoutString, 'utf8'),
+          'stdout.txt',
+        ),
+      );
+    }
+    if (stderrString != '') {
+      attachments.push(
+        new discord.MessageAttachment(
+          Buffer.from(stderrString, 'utf8'),
+          'stderr.txt',
+        ),
+      );
+    }
+
+    if (taggedString != '') {
+      msg.author.send(
+        'Compiler Error! Tagged output: \n```text\n' + taggedString + '\n```',
+        attachments,
+      );
+    } else {
+      msg.author.send('Compiler Error Output', attachments);
+    }
+  }
+
+  /**
    * Compile code, and respond with the compiled code.
    *
    * @param {String} codeAsText
@@ -260,26 +332,27 @@ class CompilerExplorerCommand {
     );
     const compilerData = compilerResp.data;
     if (compilerData.code != 0) {
+      this._sendCompilerError(msg, compilerData);
       throw new Error(
         `Compiler failed with bad status code: ${compilerData.code}.`,
       );
     }
     const asmInstructions = compilerData.asm;
 
-    // eslint-disable-next-line
-    let compiledAsmString = "Here's your compiled code:\n```x86asm\n";
+    let compiledAsmString = '';
     for (let idx = 0; idx < asmInstructions.length; ++idx) {
       compiledAsmString += asmInstructions[idx].text;
       compiledAsmString += '\n';
     }
-    compiledAsmString += '```';
 
     if (asmInstructions.length < 50) {
-      msg.channel.send(compiledAsmString);
+      msg.channel.send(
+        `Here's your compiled code:\n\`\`\`x86asm\n${compiledAsmString}\n\`\`\``,
+      );
     } else {
       const attachment = new discord.MessageAttachment(
         Buffer.from(compiledAsmString, 'utf8'),
-        'compiled-code.md',
+        'compiled-code.s',
       );
       msg.channel.send('Compiled!', attachment);
     }
