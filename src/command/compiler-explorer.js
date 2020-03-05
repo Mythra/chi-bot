@@ -238,8 +238,8 @@ class CompilerExplorerCommand {
           }
         }
         if ('text' in obj) {
-          stdoutString += obj.text;
-          stdoutString += '\n';
+          stderrString += obj.text;
+          stderrString += '\n';
         }
       }
     }
