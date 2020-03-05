@@ -407,7 +407,7 @@ class CompilerExplorerCommand {
       msgContent.indexOf('```') + 3,
       msgContent.lastIndexOf('```'),
     );
-    const codeAst = parseMarkdown('code\n```' + codeContent + '\n```')
+    const codeAst = parseMarkdown('code\n```\n' + codeContent + '\n```')
       .children[1];
     // Extracted code block.
 
