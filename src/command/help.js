@@ -11,7 +11,7 @@ class HelpCommand {
   constructor(client) {
     this.cooldownMap = {};
     this.discord_client = client;
-    this.prefix = new RegExp('^<@(!|&)[0-9]+> help(.*)?', 'gm');
+    this.prefix = new RegExp('^<@(!|&)?[0-9]+> help(.*)?', 'gm');
   }
 
   /**

@@ -10,7 +10,7 @@ class MovCommand {
    */
   constructor(client) {
     this.discord_client = client;
-    this.prefix = new RegExp('^<@(!|&)[0-9]+>(.*)?', 'gm');
+    this.prefix = new RegExp('^<@(!|&)?[0-9]+>(.*)?', 'gm');
   }
 
   /**

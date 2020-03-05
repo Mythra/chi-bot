@@ -28,7 +28,7 @@ class CompilerExplorerCommand {
       },
     });
     this.languagesSupported = {};
-    this.prefix = new RegExp('^<@(!|&)[0-9]+> compile.*', 'gm');
+    this.prefix = new RegExp('^<@(!|&)?[0-9]+> compile.*', 'gm');
   }
 
   /**
