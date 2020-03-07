@@ -6,13 +6,11 @@ const client = new Discord.Client();
 const CompilerExplorerCommand = require('./command/compiler-explorer.js')
   .command;
 const HelpCommand = require('./command/help.js').command;
-const MovCommand = require('./command/mov-command.js').command;
 const UwuCommand = require('./command/uwu-command.js').command;
 
 const activeCommands = [
   new CompilerExplorerCommand(client),
   new HelpCommand(client),
-  new MovCommand(client),
   new UwuCommand(client),
 ];
 
