@@ -35,10 +35,14 @@ class HelpCommand {
     if (msgContent.match(this.prefix) == null) {
       return;
     }
-    if (msg.mentions.users.length >= 1) {
-      if (msg.mentions.users.first().id != this.discord_client.user.id) {
-        return;
-      }
+    if (msg.mentions.users == null) {
+      return;
+    }
+    if (msg.mentions.users.first() == null) {
+      return;
+    }
+    if (msg.mentions.users.first().id != this.discord_client.user.id) {
+      return;
     }
 
     msg.channel.send(
