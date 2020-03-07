@@ -388,12 +388,6 @@ class CompilerExplorerCommand {
       if (msg.mentions.users.first().id != this.discord_client.user.id) {
         return;
       }
-    } else if (msg.mentions.roles.length >= 1) {
-      if (
-        !this.discord_client.user.roles.has(msg.mentions.roles.first().name)
-      ) {
-        return;
-      }
     }
 
     // Extract code content out into a custom message. Otherwise
