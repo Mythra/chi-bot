@@ -370,6 +370,8 @@ class CompilerExplorerCommand extends Command {
    *  The message to process.
    */
   async onMsg(msg) {
+    const msgContent = msg.content.trim();
+
     if (Object.keys(this.languagesSupported).length == 0) {
       await this._fetchSupportedLanguages();
     }
