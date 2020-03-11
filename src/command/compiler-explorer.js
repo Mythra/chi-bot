@@ -1,8 +1,6 @@
-const argParse = require('yargs-parser');
 const axios = require('axios');
 const Command = require('./command.js').Command;
 const discord = require('discord.js');
-const parseMarkdown = require('@textlint/markdown-to-ast').parse;
 
 /**
  * A discord command responsible for reaching out to compiler explorer,
@@ -19,7 +17,8 @@ class CompilerExplorerCommand extends Command {
   constructor(client) {
     super({
       client,
-      regex: new RegExp('^<@(!|&)?[0-9]+> compile.*', 'gm'),
+      prefix: 'compile',
+      prefixNeedsAfter: true,
     });
 
     this.http_client = axios.create({
@@ -44,33 +43,6 @@ class CompilerExplorerCommand extends Command {
       const language = languages[idx];
       this.languagesSupported[language.name.toLowerCase()] = language.id;
     }
-  }
-
-  /**
-   * Derive the language to use for compiler explorer based off of the markdown
-   * tag. Default to C++.
-   *
-   * @param {Object} codeAST
-   *  The AST tree object for the code block.
-   * @param {String?} langArg
-   *  The language argument length.
-   * @return {String}
-   *  The language name to use.
-   */
-  _deriveLanguage(codeAST, langArg) {
-    let lang = codeAST.lang;
-    if (lang == null) {
-      if (langArg == null || langArg.trim() == '') {
-        lang = 'c++';
-      } else {
-        lang = langArg.trim();
-      }
-    }
-    // cpp isn't recognized on compiler explorer. normalize to c++.
-    if (lang == 'cpp') {
-      lang = 'c++';
-    }
-    return lang.toLowerCase();
   }
 
   /**
@@ -130,18 +102,6 @@ class CompilerExplorerCommand extends Command {
     }
 
     return compiler;
-  }
-
-  /**
-   * The argument string.
-   *
-   * @param {String} argStr
-   *  The string to parse for arguments.
-   * @return {Object}
-   *  an object of {arg_key: arg_value}
-   */
-  _extractRawArgs(argStr) {
-    return argParse(argStr);
   }
 
   /**
@@ -271,7 +231,9 @@ class CompilerExplorerCommand extends Command {
 
     if (taggedString != '') {
       msg.author.send(
-        'Compiler Error! Tagged output: \n```text\n' + taggedString + '\n```',
+        'Compiler Error! Note may contain color codes for a shell, may be best to print out in your shell. Tagged output: \n```text\n' +
+          taggedString +
+          '\n```',
         attachments,
       );
     } else {
@@ -376,54 +338,29 @@ class CompilerExplorerCommand extends Command {
       await this._fetchSupportedLanguages();
     }
 
-    // Extract code content out into a custom message. Otherwise
-    // the markdown parser doesn't know how to handle text + code blocks
-    // that start on the same line.
-    const codeBlockCount = (msgContent.match(/```/g) || []).length;
-    if (codeBlockCount != 2) {
+    const arr = this.extractFromCodeblockSafely(msgContent);
+    if (arr == null) {
       return;
     }
-    const codeContent = msgContent.substring(
-      msgContent.indexOf('```') + 3,
-      msgContent.lastIndexOf('```'),
-    );
+    let langTag = arr[0];
+    const codeAst = arr[1];
 
-    let startsWithLanguageTag = false;
-    const supportedLanguagesKey = Object.keys(this.languagesSupported);
-    for (let idx = 0; idx < supportedLanguagesKey.length; ++idx) {
-      const supportedKey = supportedLanguagesKey[idx];
-      if (codeContent.toLowerCase().startsWith(supportedKey)) {
-        startsWithLanguageTag = true;
-        break;
-      }
-      if (supportedKey == 'c++') {
-        // Special Case 'cpp'
-        if (codeContent.toLowerCase().startsWith('cpp')) {
-          startsWithLanguageTag = true;
-          break;
-        }
-      }
-    }
-
-    let codeAst = null;
-    if (startsWithLanguageTag) {
-      codeAst = parseMarkdown('code\n```' + codeContent + '\n```').children[1];
-    } else {
-      codeAst = parseMarkdown('code\n```\n' + codeContent + '\n```')
-        .children[1];
-    }
-    // Extracted code block.
-
-    const args = this._extractRawArgs(
+    const args = this.extractRawArgs(
       msgContent.substring(
         msgContent.indexOf('> compile') + '> compile'.length,
         msgContent.indexOf('```'),
       ),
     );
-    const language = this._deriveLanguage(codeAst, args['language']);
-    if (!(language in this.languagesSupported)) {
+    if (args['language'] != null && args['language'].trim() != '') {
+      langTag = args['language'];
+    }
+    if (langTag == null || langTag == '') {
+      langTag = 'c++';
+    }
+
+    if (!(langTag in this.languagesSupported)) {
       msg.channel.send(
-        `Unknown Language: ${language}. Supported languages are: ${Object.keys(
+        `Unknown Language: ${langTag}. Supported languages are: ${Object.keys(
           this.languagesSupported,
         ).join(', ')}.`,
       );
@@ -433,7 +370,7 @@ class CompilerExplorerCommand extends Command {
     let compiler = '';
     try {
       compiler = await this._deriveCompilerForLang(
-        language,
+        langTag,
         args['compiler'],
         msg,
       );
@@ -451,7 +388,7 @@ class CompilerExplorerCommand extends Command {
       await this._compileCode(
         code,
         args,
-        this.languagesSupported[language],
+        this.languagesSupported[langTag],
         compiler,
         msg,
       );

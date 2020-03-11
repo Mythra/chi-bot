@@ -3,7 +3,7 @@
   "main": "src/bot.js",
   "version": "1.0.0",
   "private": true,
-  "description": "Discord bot that reaches out to godbolt.org to perform compilations.",
+  "description": "A discord bot for Stryder's tech corner. Compiler-Explorer && QuickBench.",
   "scripts": {
     "lint": "npm run lint:prettier && npm run lint:eslint",
     "lint:prettier": "prettier --single-quote --print-width 79 --trailing-comma all --quote-props consistent --check './**/*.js'",
@@ -17,10 +17,12 @@
     "@textlint/markdown-to-ast": "^6.1.7",
     "axios": "^0.19.2",
     "bufferutil": "^4.0.1",
+    "canvas": "^2.6.1",
     "discord.js": "^12.0.1",
     "erlpack": "github:discordapp/erlpack",
     "sodium": "^3.0.2",
     "utf-8-validate": "^5.0.2",
+    "vega": "^5.10.0",
     "yargs-parser": "^18.0.0",
     "zlib-sync": "^0.1.6"
   },
