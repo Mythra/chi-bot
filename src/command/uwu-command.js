@@ -14,7 +14,7 @@ class UwuCommand extends Command {
     super({
       client,
       hasTimeout: false,
-      regex: new RegExp('^<@(!|&)?[0-9]+> uwu(.*)?', 'gm'),
+      prefix: 'uwu',
     });
   }
 

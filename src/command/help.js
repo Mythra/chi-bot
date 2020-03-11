@@ -13,7 +13,7 @@ class HelpCommand extends Command {
   constructor(client) {
     super({
       client,
-      regex: new RegExp('^<@(!|&)?[0-9]+> help(.*)?', 'gm'),
+      prefix: 'help',
       timeoutSeconds: 30,
     });
   }

@@ -11,6 +11,7 @@ class Command {
   constructor({
     client,
     hasTimeout = true,
+    prefix,
     regex,
     limitTo = [],
     timeoutSeconds = 3,
@@ -19,6 +20,9 @@ class Command {
     this.regex = regex;
     this.hasTimeout = hasTimeout;
 
+    if (this.regex == null && prefix != null && prefix.trim() != '') {
+      this.regex = new RegExp(`^<@(!|&)?[0-9]+> ${prefix}(.*)?`, 'gm');
+    }
     if (this.regex == null) {
       throw new Error('Command does not have a regex!');
     }

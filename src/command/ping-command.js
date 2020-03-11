@@ -13,8 +13,8 @@ class PingCommand extends Command {
   constructor(client) {
     super({
       client,
+      prefix: 'ping',
       hasTimeout: false,
-      regex: new RegExp('^<@(!|&)?[0-9]+> ping(.*)?', 'gm'),
     });
   }
 
