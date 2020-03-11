@@ -1,7 +1,9 @@
+const Command = require('./command.js').Command;
+
 /**
  * A discord command responsible for providing a help command for
  */
-class HelpCommand {
+class HelpCommand extends Command {
   /**
    * Construct this help command.
    *
@@ -9,9 +11,11 @@ class HelpCommand {
    *  The discord client.
    */
   constructor(client) {
-    this.cooldownMap = {};
-    this.discord_client = client;
-    this.prefix = new RegExp('^<@(!|&)?[0-9]+> help(.*)?', 'gm');
+    super({
+      client,
+      regex: new RegExp('^<@(!|&)?[0-9]+> help(.*)?', 'gm'),
+      timeoutSeconds: 30,
+    });
   }
 
   /**
@@ -20,31 +24,7 @@ class HelpCommand {
    * @param {Discord.Message} msg
    *  The discord message.
    */
-  async onMessage(msg) {
-    const timestamp = new Date().getTime() / 1000;
-    if (msg.channel.id in this.cooldownMap) {
-      const lastMsg = this.cooldownMap[msg.channel.id];
-      // 30 second cooldown.
-      if (timestamp - lastMsg < 30) {
-        return;
-      }
-    }
-    this.cooldownMap[msg.channel.id] = timestamp;
-
-    const msgContent = msg.content.trim();
-    if (msgContent.match(this.prefix) == null) {
-      return;
-    }
-    if (msg.mentions.users == null) {
-      return;
-    }
-    if (msg.mentions.users.first() == null) {
-      return;
-    }
-    if (msg.mentions.users.first().id != this.discord_client.user.id) {
-      return;
-    }
-
+  async onMsg(msg) {
     msg.channel.send(
       'Hey! Welcome to Chi-Bot, your one stop shop for accessing compiler explorer through discord!\n' +
         'To run a compilation simply run: @chi-bot compile (args)? \\`\\`\\`\n<code>\n\\`\\`\\`\n' +

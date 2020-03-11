@@ -19,7 +19,7 @@ class Command {
     this.regex = regex;
     this.hasTimeout = hasTimeout;
 
-    if (this.regex == null || this.regex == '') {
+    if (this.regex == null) {
       throw new Error('Command does not have a regex!');
     }
 
