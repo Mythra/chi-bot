@@ -19,6 +19,10 @@ class Command {
     this.regex = regex;
     this.hasTimeout = hasTimeout;
 
+    if (this.regex == null || this.regex == '' || this.regex.strip() == '') {
+      throw new Error('Command does not have a regex!');
+    }
+
     if (this.hasTimeout) {
       this.timeoutMap = {};
       this.timeoutSeconds = timeoutSeconds;
@@ -132,13 +136,37 @@ class Command {
    *  The discord message that came in.
    */
   async onMessage(msg) {
+    // Check against REGEX.
+    if (msg == null || msg['content'] == null) {
+      return;
+    }
+    const msgContent = msg.content.trim();
+    if (msgContent.match(this.regex) == null) {
+      return;
+    }
+
+    // Check that Chi-Bot was pinged first.
+    if (
+      msg.mentions == null ||
+      msg.mentions.users == null ||
+      msg.mentions.users.first() == null
+    ) {
+      return;
+    }
+    if (msg.mentions.users.first().id != this.discord_client.user.id) {
+      return;
+    }
+
+    // Check access.
     if (!this._enforceAccess(msg)) {
       return;
     }
+    // Check timeout.
     if (!this._enforceTimeout(msg)) {
       return;
     }
 
+    // Process.
     await this.onMsg(msg);
   }
 }

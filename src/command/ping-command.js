@@ -11,7 +11,11 @@ class PingCommand extends Command {
    *  The discord client.
    */
   constructor(client) {
-    super({ client, hasTimeout: false });
+    super({
+      client,
+      hasTimeout: false,
+      regex: new RegExp('^<@(!|&)?[0-9]+> ping(.*)?', 'gm'),
+    });
   }
 
   /**
