@@ -18,5 +18,7 @@ module.exports = {
     'indent': 'off',
     // Prettier takes care of this.
     'max-len': 'off',
+    // Prettier.
+    'object-curly-spacing': 'off',
   },
 };
