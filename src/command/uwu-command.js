@@ -1,7 +1,9 @@
+const Command = require('./command.js').Command;
+
 /**
  * A command to respond to uwu's.
  */
-class UwuCommand {
+class UwuCommand extends Command {
   /**
    * Create an instance of this uwu command.
    *
@@ -9,8 +11,11 @@ class UwuCommand {
    *  The discord client instance.
    */
   constructor(client) {
-    this.discord_client = client;
-    this.prefix = new RegExp('^<@(!|&)?[0-9]+> uwu(.*)?', 'gm');
+    super({
+      client,
+      hasTimeout: false,
+      regex: new RegExp('^<@(!|&)?[0-9]+> uwu(.*)?', 'gm'),
+    });
   }
 
   /**
@@ -19,21 +24,7 @@ class UwuCommand {
    * @param {Discord.Message} msg
    *  The message received from discord.
    */
-  async onMessage(msg) {
-    const msgContent = msg.content.trim();
-    if (msgContent.match(this.prefix) == null) {
-      return;
-    }
-    if (msg.mentions.users == null) {
-      return;
-    }
-    if (msg.mentions.users.first() == null) {
-      return;
-    }
-    if (msg.mentions.users.first().id != this.discord_client.user.id) {
-      return;
-    }
-
+  async onMsg(msg) {
     msg.channel.send('uwu7');
   }
 }

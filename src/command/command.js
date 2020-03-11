@@ -22,6 +22,9 @@ class Command {
     if (this.regex == null) {
       throw new Error('Command does not have a regex!');
     }
+    if (this.discord_client == null) {
+      throw new Error('Command does not have a discord client!');
+    }
 
     if (this.hasTimeout) {
       this.timeoutMap = {};

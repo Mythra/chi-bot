@@ -1,5 +1,6 @@
 const argParse = require('yargs-parser');
 const axios = require('axios');
+const Command = require('./command.js').Command;
 const discord = require('discord.js');
 const parseMarkdown = require('@textlint/markdown-to-ast').parse;
 
@@ -8,7 +9,7 @@ const parseMarkdown = require('@textlint/markdown-to-ast').parse;
  * and compiling user provided code. It will spit back out the output of the
  * compiled code.
  */
-class CompilerExplorerCommand {
+class CompilerExplorerCommand extends Command {
   /**
    * Construct this command.
    *
@@ -16,8 +17,11 @@ class CompilerExplorerCommand {
    *  The discord client to use.
    */
   constructor(client) {
-    this.cooldownMap = {};
-    this.discord_client = client;
+    super({
+      client,
+      regex: new RegExp('^<@(!|&)?[0-9]+> compile.*', 'gm'),
+    });
+
     this.http_client = axios.create({
       baseURL: 'https://godbolt.org/api',
       timeout: 60000,
@@ -28,7 +32,6 @@ class CompilerExplorerCommand {
       },
     });
     this.languagesSupported = {};
-    this.prefix = new RegExp('^<@(!|&)?[0-9]+> compile.*', 'gm');
   }
 
   /**
@@ -366,32 +369,9 @@ class CompilerExplorerCommand {
    * @param {Discord.Message} msg
    *  The message to process.
    */
-  async onMessage(msg) {
-    const timestamp = new Date().getTime() / 1000;
-    if (msg.channel.id in this.cooldownMap) {
-      const lastMsg = this.cooldownMap[msg.channel.id];
-      // 3 second cooldown.
-      if (timestamp - lastMsg < 3) {
-        return;
-      }
-    }
-    this.cooldownMap[msg.channel.id] = timestamp;
-
+  async onMsg(msg) {
     if (Object.keys(this.languagesSupported).length == 0) {
       await this._fetchSupportedLanguages();
-    }
-    const msgContent = msg.content.trim();
-    if (msgContent.match(this.prefix) == null) {
-      return;
-    }
-    if (msg.mentions.users == null) {
-      return;
-    }
-    if (msg.mentions.users.first() == null) {
-      return;
-    }
-    if (msg.mentions.users.first().id != this.discord_client.user.id) {
-      return;
     }
 
     // Extract code content out into a custom message. Otherwise
