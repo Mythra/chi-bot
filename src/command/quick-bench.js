@@ -67,6 +67,28 @@ class QuickBenchCommand extends Command {
   }
 
   /**
+   * Generate a link to quickbench.
+   *
+   * @param {String} cppCode
+   *  The C++ Code.
+   * @return {String}
+   *  The Link to open this in quick-bench.
+   */
+  _quickbenchLink(cppCode) {
+    return (
+      'http://quick-bench.com/#' +
+      btoa(
+        JSON.stringify({
+          text: cppCode,
+        }).replace(/[\u007F-\uFFFF]/g, function(chr) {
+          // json unicode escapes must always be 4 characters long, so pad with leading zeros
+          return '\\u' + ('0000' + chr.charCodeAt(0).toString(16)).substr(-4);
+        }),
+      )
+    );
+  }
+
+  /**
    * Run a benchmark on quick-bench.
    *
    * @param {Discord.Message} msg
@@ -246,7 +268,9 @@ class QuickBenchCommand extends Command {
       const pngBuff = canvas.toBuffer();
 
       msg.channel.send(
-        'Benchmark Results',
+        `Benchmark Results.\nQuickBench Link: <${this._quickbenchLink(
+          cppCode,
+        )}>\n`,
         new discord.MessageAttachment(pngBuff, 'benchmark.png'),
       );
     }
