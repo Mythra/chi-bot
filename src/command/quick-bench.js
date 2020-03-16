@@ -17,7 +17,6 @@ class QuickBenchCommand extends Command {
   constructor(client) {
     super({
       client,
-      limitTo: ['user:419986138762182661'],
       prefix: 'bench',
       prefixNeedsAfter: true,
       timeoutSeconds: 10,
