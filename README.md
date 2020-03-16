@@ -1,16 +1,13 @@
 # Chi-Bot #
 
-Chi-Bot is a bot that allows you to reach out to Compiler-Explorer directly
-from discord. No longer do you have to leave the safety of your discord
-channel. Even if you want to make a particular compiler cry.
+Chi-Bot is a bot primarily developed for Stryder7x's Discord Servers #code-channel.
+It was originally developed to only reach out to Compiler Explorer (hence the name
+Chi: "Compilers Have Invaded", (also being named after a mod "Chi" in Stryder's server)).
+It has since expanded to include reaching out to Quick-Bench, as well as several other
+"Fun" commands just on a whim.
 
-It is called "Chi-Bot" because not only is "Chi" the name of a friend of
-the creator, but it also can be acronymed to: "Compiler Have Invaded" which
-just sounds edgy, and discord is like the place for anything edgy (and
-sometimes serious) discussion.
-
-Feel free to deploy chi-bot to your own discord server, however if you want
-to use the one hosted by the creator you'd want to go to:
+Although it is only developed for Stryder's Server if you really wanted to add it you could
+do so at the link:
 
 <https://discordapp.com/oauth2/authorize?client_id=684897448090665002&scope=bot&permissions=67169344>
 
@@ -37,6 +34,7 @@ inside of `CHI_BOT_DISCORD_TOKEN`.
 
 ## Special Thanks ##
 
-* Matt Godbolt & Others who have made CompilerExplorer great - This wouldn't be possible without you.
+* Matt Godbolt & Others who have made CompilerExplorer great.
+* Fred Tingaud & Others who have made QuickBench great.
 * Chi - Letting me use her name & PFP for the "official" bot.
 * Javascript - for nothing.
