@@ -77,14 +77,14 @@ class QuickBenchCommand extends Command {
   _quickbenchLink(cppCode) {
     return (
       'http://quick-bench.com/#' +
-      btoa(
+      Buffer.from(
         JSON.stringify({
           text: cppCode,
         }).replace(/[\u007F-\uFFFF]/g, function(chr) {
           // json unicode escapes must always be 4 characters long, so pad with leading zeros
           return '\\u' + ('0000' + chr.charCodeAt(0).toString(16)).substr(-4);
         }),
-      )
+      ).toString('base64')
     );
   }
 
@@ -268,9 +268,7 @@ class QuickBenchCommand extends Command {
       const pngBuff = canvas.toBuffer();
 
       msg.channel.send(
-        `Benchmark Results.\nQuickBench Link: <${this._quickbenchLink(
-          cppCode,
-        )}>\n`,
+        `[Benchmark Results](${this._quickbenchLink(cppCode)})`,
         new discord.MessageAttachment(pngBuff, 'benchmark.png'),
       );
     }
