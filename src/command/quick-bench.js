@@ -268,7 +268,7 @@ class QuickBenchCommand extends Command {
       const pngBuff = canvas.toBuffer();
 
       msg.channel.send(
-        `[Benchmark Results](${this._quickbenchLink(cppCode)})`,
+        `Benchmark Results. View online at: ${this._quickbenchLink(cppCode)}`,
         new discord.MessageAttachment(pngBuff, 'benchmark.png'),
       );
     }

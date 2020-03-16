@@ -31,8 +31,7 @@ class HelpCommand extends Command {
       .setDescription(
         'Hello! Welcome to Chi-Bot, your one stop shop for code integrations through discord!\n' +
           'For things that take input as code, it expects to be called like: "@chi-bot <action (e.g. "compile")> <args (e.g. --language "blah"> \\`\\`\\` my code \\`\\`\\`."\n' +
-          'Feel free to ping the_true_kungfury if you have any questions! She is okay with it!\n',
-        'Code can be found: [HERE](https://github.com/SecurityInsanity/chi-bot).',
+          'Feel free to ping the_true_kungfury if you have any questions! She is okay with it!',
       )
       .addFields(
         {
