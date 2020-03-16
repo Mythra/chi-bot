@@ -25,9 +25,9 @@ class Command {
 
     if (this.regex == null && prefix != null && prefix.trim() != '') {
       if (prefixNeedsAfter) {
-        this.regex = new RegExp(`^<@(!|&)?[0-9]+> ${prefix}.*`, 'gm');
+        this.regex = new RegExp(`^<@(!|&)?[0-9]+> ${prefix}.*`, 'gim');
       } else {
-        this.regex = new RegExp(`^<@(!|&)?[0-9]+> ${prefix}(.*)?`, 'gm');
+        this.regex = new RegExp(`^<@(!|&)?[0-9]+> ${prefix}(.*)?`, 'gim');
       }
     }
     if (this.regex == null) {
