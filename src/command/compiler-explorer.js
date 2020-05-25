@@ -267,6 +267,14 @@ class CompilerExplorerCommand extends Command {
       msg,
     );
 
+    let clangTidyChecks;
+    if (userArgs['checks'] != null) {
+      clangTidyChecks = userArgs['checks'];
+    } else {
+      clangTidyChecks =
+        'abseil-*,bugprone-*,clang-analyzer-*,clang-diagnostic-*,modernize-*,performance-*,readability-braces-around-statements,readability-container-size-empty,readability-redundant-*,-abseil-no-internal-dependencies';
+    }
+
     console.log(
       'Compiling code: ',
       codeAsText.split('\n').join(' '),
@@ -291,7 +299,12 @@ class CompilerExplorerCommand extends Command {
             libraryCode: false,
             trim: true,
           },
-          tools: [],
+          tools: [
+            {
+              args: `-checks=${clangTidyChecks}`,
+              id: 'clangtidytrunk',
+            },
+          ],
           libraries: libraries,
         },
         allowStoreCodeDebug: true,
@@ -312,16 +325,82 @@ class CompilerExplorerCommand extends Command {
       compiledAsmString += '\n';
     }
 
-    if (asmInstructions.length < 50) {
-      msg.channel.send(
-        `Here's your compiled code:\n\`\`\`x86asm\n${compiledAsmString}\n\`\`\``,
-      );
+    let clangTidyOutput = '';
+    let clangTidyLines = 0;
+    if (
+      compiledAsmString['tools'] != null &&
+      compiledAsmString['tools'].length > 0
+    ) {
+      const ctOutput = compiledAsmString['tools'][0];
+      if (
+        ctOutput['code'] == 0 &&
+        ctOutput['id'] == 'clangtidytrunk' &&
+        ctOutput['stdout'] != null &&
+        ctOutput['stdout'].length > 0
+      ) {
+        for (let idx = 0; idx < ctOutput.stdout.length; ++idx) {
+          clangTidyOutput += ctOutput.stdout[idx].text;
+          clangTidyOutput += '\n';
+          clangTidyLines++;
+        }
+      }
+    }
+
+    if (clangTidyOutput == '') {
+      if (asmInstructions.length < 50) {
+        msg.channel.send(
+          `Your code has been compiled to:\n\`\`\`x86asm\n${compiledAsmString}\n\`\`\`\nNo warnings were generated!`,
+        );
+      } else {
+        const attachment = new discord.MessageAttachment(
+          Buffer.from(compiledAsmString, 'utf8'),
+          'compiled-code.s',
+        );
+        msg.channel.send(
+          'Your code has been compiled, no warnings were generated.',
+          attachment,
+        );
+      }
     } else {
-      const attachment = new discord.MessageAttachment(
-        Buffer.from(compiledAsmString, 'utf8'),
-        'compiled-code.s',
-      );
-      msg.channel.send('Compiled!', attachment);
+      if (clangTidyLines < 50 && asmInstructions.length < 50) {
+        msg.channel.send(
+          `Your code has been compiled to:\n\`\`\`x86asm\n${compiledAsmString}\n\`\`\`\n` +
+            `The following warnings were generated (controllable with \`--checks\`, clang-tidy):\n` +
+            `\`\`\`text\n${clangTidyOutput}\`\`\``,
+        );
+      } else if (clangTidyLines < 50 && asmInstructions.length > 50) {
+        const attachment = new discord.MessageAttachment(
+          Buffer.from(compiledAsmString, 'utf8'),
+          'compiled-code.s',
+        );
+        msg.channel.send(
+          `Your code has been compiled, the following warnings were generated (controllable with \`--checks\`, clang-tidy):\n` +
+            `\`\`\`text\n${clangTidyOutput}\`\`\``,
+          attachment,
+        );
+      } else if (clangTidyLines > 50 && asmInstructions.length < 50) {
+        const attachment = new discord.MessageAttachment(
+          Buffer.from(clangTidyOutput, 'utf8'),
+          'compiled-code-warnings.txt',
+        );
+        msg.channel.send(
+          `Your code has been compiled to:\n\`\`\`x86asm\n${compiledAsmString}\n\`\`\`\nWarnings were generated (controllable with \`--checks\`, clang-tidy).`,
+          attachment,
+        );
+      } else {
+        const codeAttachment = new discord.MessageAttachment(
+          Buffer.from(compiledAsmString, 'utf8'),
+          'compiled-code.s',
+        );
+        const warningAttachment = new discord.MessageAttachment(
+          Buffer.from(clangTidyOutput, 'utf8'),
+          'compiled-code-warnings.txt',
+        );
+        msg.channel.send(
+          'Your code has been compiled, and warnings were generated (controllable with `--checks`, clang-tidy).',
+          [codeAttachment, warningAttachment],
+        );
+      }
     }
   }
 
