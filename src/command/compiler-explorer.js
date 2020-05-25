@@ -280,6 +280,7 @@ class CompilerExplorerCommand extends Command {
       codeAsText.split('\n').join(' '),
       '\nArgs: ',
       compilerArgs,
+      `\nChecks: [${clangTidyChecks}]`,
     );
     const compilerResp = await this.http_client.post(
       `/compiler/${compiler}/compile`,
@@ -327,11 +328,8 @@ class CompilerExplorerCommand extends Command {
 
     let clangTidyOutput = '';
     let clangTidyLines = 0;
-    if (
-      compiledAsmString['tools'] != null &&
-      compiledAsmString['tools'].length > 0
-    ) {
-      const ctOutput = compiledAsmString['tools'][0];
+    if (compilerData['tools'] != null && compilerData['tools'].length > 0) {
+      const ctOutput = compilerData['tools'][0];
       if (
         ctOutput['code'] == 0 &&
         ctOutput['id'] == 'clangtidytrunk' &&
