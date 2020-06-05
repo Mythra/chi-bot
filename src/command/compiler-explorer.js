@@ -360,13 +360,13 @@ class CompilerExplorerCommand extends Command {
         );
       }
     } else {
-      if (clangTidyLines < 50 && asmInstructions.length < 50) {
+      if (clangTidyLines <= 25 && asmInstructions.length <= 25) {
         msg.channel.send(
           `Your code has been compiled to:\n\`\`\`x86asm\n${compiledAsmString}\n\`\`\`\n` +
             `The following warnings were generated (controllable with \`--checks\`, clang-tidy):\n` +
             `\`\`\`text\n${clangTidyOutput}\`\`\``,
         );
-      } else if (clangTidyLines < 50 && asmInstructions.length > 50) {
+      } else if (clangTidyLines <= 25 && asmInstructions.length > 25) {
         const attachment = new discord.MessageAttachment(
           Buffer.from(compiledAsmString, 'utf8'),
           'compiled-code.s',
@@ -376,7 +376,7 @@ class CompilerExplorerCommand extends Command {
             `\`\`\`text\n${clangTidyOutput}\`\`\``,
           attachment,
         );
-      } else if (clangTidyLines > 50 && asmInstructions.length < 50) {
+      } else if (clangTidyLines > 25 && asmInstructions.length <= 25) {
         const attachment = new discord.MessageAttachment(
           Buffer.from(clangTidyOutput, 'utf8'),
           'compiled-code-warnings.txt',
