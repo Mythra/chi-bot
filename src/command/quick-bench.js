@@ -23,7 +23,7 @@ class QuickBenchCommand extends Command {
     });
 
     this.http_client = axios.create({
-      baseURL: 'https://back.quick-bench.com',
+      baseURL: 'https://quick-bench.com',
       timeout: 70000,
       headers: {
         'Accept': 'application/json',
@@ -42,6 +42,7 @@ class QuickBenchCommand extends Command {
       'clang-7.1',
       'clang-8.0',
       'clang-9.0',
+      'clang-10.0',
       'gcc-5.5',
       'gcc-6.4',
       'gcc-6.5',
@@ -54,6 +55,7 @@ class QuickBenchCommand extends Command {
       'gcc-8.3',
       'gcc-9.1',
       'gcc-9.2',
+      'gcc-10.1',
     ];
     this.supported_std = {
       'c++11': '11',
@@ -159,15 +161,16 @@ class QuickBenchCommand extends Command {
       return;
     }
 
-    const resp = await this.http_client.post('/', {
-      code: cppCode,
-      compiler: compiler,
-      cppVersion: this.supported_std[std],
+    const resp = await this.http_client.post('/quick/', {
+      protocolVersion: 4,
       force: false,
       isAnnotated: false,
-      lib: lib,
-      optim: optim,
-      protocolVersion: 3,
+      code: cppCode,
+      options: {
+        compiler: compiler,
+        cppVersion: this.supported_std[std],
+        lib: lib,
+      },
     });
 
     const vizGraphData = {
