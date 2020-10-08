@@ -37,7 +37,7 @@ class CompilerExplorerCommand extends Command {
    * Fetch the supported languages we can use for compiler explorer.
    */
   async _fetchSupportedLanguages() {
-    const resp = await this.http_client.get('/languages');
+    const resp = await this.http_client.get('/languages?fields=id,name');
     const languages = resp.data;
     for (let idx = 0; idx < languages.length; ++idx) {
       const language = languages[idx];
@@ -91,7 +91,9 @@ class CompilerExplorerCommand extends Command {
 
     if (compiler == '') {
       // Fetch default compiler.
-      const resp = await this.http_client.get('/languages');
+      const resp = await this.http_client.get(
+        '/languages?fields=name,defaultCompiler',
+      );
       const languages = resp.data;
       for (let idx = 0; idx < languages.length; ++idx) {
         if (languages[idx].name.toLowerCase() == lang) {
