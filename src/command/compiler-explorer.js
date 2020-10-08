@@ -456,7 +456,7 @@ class CompilerExplorerCommand extends Command {
       console.log(err);
       return;
     }
-    if (compiler == '') {
+    if (compiler == null || compiler == '') {
       msg.channel.send(
         `No known, or default Compiler, for language "${lang}".` +
           `Please specify one manually.`,
