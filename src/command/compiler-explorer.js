@@ -83,7 +83,7 @@ class CompilerExplorerCommand extends Command {
       if (!foundCompiler) {
         msg.channel.send(
           `Unknown Compiler "${compiler}", for language "${lang}".` +
-            `Using default.`,
+            `Trying to use default.`,
         );
         compiler = '';
       }
@@ -454,6 +454,13 @@ class CompilerExplorerCommand extends Command {
     } catch (err) {
       msg.channel.send('Failed to derive Compiler!');
       console.log(err);
+      return;
+    }
+    if (compiler == '') {
+      msg.channel.send(
+        `No known, or default Compiler, for language "${lang}".` +
+          `Please specify one manually.`,
+      );
       return;
     }
     const code = codeAst.value.trim();
