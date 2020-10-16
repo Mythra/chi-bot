@@ -274,7 +274,7 @@ class CompilerExplorerCommand extends Command {
       clangTidyChecks = userArgs['checks'];
     } else {
       clangTidyChecks =
-        'abseil-*,bugprone-*,clang-analyzer-*,clang-diagnostic-*,modernize-*,performance-*,readability-braces-around-statements,readability-container-size-empty,readability-redundant-*,-abseil-no-internal-dependencies';
+        'abseil-*,bugprone-*,clang-analyzer-*,clang-diagnostic-*,modernize-*,performance-*,readability-braces-around-statements,readability-container-size-empty,readability-redundant-*,-abseil-no-internal-dependencies,-modernize-use-trailing-return-type';
     }
 
     console.log(

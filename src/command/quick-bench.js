@@ -53,8 +53,10 @@ class QuickBenchCommand extends Command {
       'gcc-8.1',
       'gcc-8.2',
       'gcc-8.3',
+      'gcc-8.4',
       'gcc-9.1',
       'gcc-9.2',
+      'gcc-9.3',
       'gcc-10.1',
     ];
     this.supported_std = {
@@ -75,9 +77,9 @@ class QuickBenchCommand extends Command {
    * @return {String}
    *  The Link to open this in quick-bench.
    */
-  _quickbenchLink(cppCode) {
+  _longQuickBenchLink(cppCode) {
     return (
-      'http://quick-bench.com/#' +
+      'https://quick-bench.com/#' +
       Buffer.from(
         JSON.stringify({
           text: cppCode,
@@ -269,8 +271,13 @@ class QuickBenchCommand extends Command {
       const canvas = await view.toCanvas();
       const pngBuff = canvas.toBuffer();
 
+      let url = this._longQuickBenchLink(cppCode);
+      if (resp.data['id'] != null) {
+        url = `https://quick-bench.com/q/${resp.data['id']}`;
+      }
+
       msg.channel.send(
-        `Benchmark Results. View online at: ${this._quickbenchLink(cppCode)}`,
+        `Benchmark Results. View online at: ${url}`,
         new discord.MessageAttachment(pngBuff, 'benchmark.png'),
       );
     }
