@@ -163,6 +163,8 @@ class QuickBenchCommand extends Command {
       return;
     }
 
+    this._markWaiting(msg);
+
     const resp = await this.http_client.post('/quick/', {
       protocolVersion: 4,
       force: false,

@@ -136,6 +136,16 @@ class Command {
   }
 
   /**
+   * Mark a message as being processed.
+   *
+   * @param {Discord.Message} msg
+   *  The discord message to react too.
+   */
+  _markWaiting(msg) {
+    msg.react('🕒');
+  }
+
+  /**
    * The argument string.
    *
    * @param {String} argStr

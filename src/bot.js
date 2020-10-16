@@ -10,13 +10,22 @@ const PingCommand = require('./command/ping-command.js').command;
 const QuickBenchCommand = require('./command/quick-bench.js').command;
 const UwuCommand = require('./command/uwu-command.js').command;
 
-const activeCommands = [
-  new CompilerExplorerCommand(client),
-  new HelpCommand(client),
-  new PingCommand(client),
-  new QuickBenchCommand(client),
-  new UwuCommand(client),
-];
+let activeCommands;
+if (process.env.MINIMAL == '1') {
+  activeCommands = [
+    new CompilerExplorerCommand(client),
+    new HelpCommand(client),
+    new PingCommand(client),
+    new QuickBenchCommand(client),
+    new UwuCommand(client),
+  ];
+} else {
+  activeCommands = [
+    new CompilerExplorerCommand(client),
+    new HelpCommand(client),
+    new QuickBenchCommand(client),
+  ];
+}
 
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);

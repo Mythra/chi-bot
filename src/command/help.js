@@ -25,34 +25,59 @@ class HelpCommand extends Command {
    *  The discord message.
    */
   async onMsg(msg) {
-    const embed = new discord.MessageEmbed()
-      .setColor('#C700BB')
-      .setTitle('Help')
-      .setDescription(
-        'Hello! Welcome to Chi-Bot, your one stop shop for code integrations through discord!\n' +
-          'For things that take input as code, it expects to be called like: "@chi-bot <action (e.g. "compile")> <args (e.g. --language "blah"> \\`\\`\\` my code \\`\\`\\`."\n' +
-          'Feel free to ping Mythra#1337 if you have any questions! She is okay with it!',
-      )
-      .addFields(
-        {
-          name: 'compile',
-          value:
-            'Take code, and see the compiled output. Possible arguments are "--compiler-args", "--libraries", "--language", and "--compiler"',
-        },
-        {
-          name: 'bench',
-          value:
-            'Take C/C++ code, and run the benchmarks with google benchmark. Possible arguments are: "--language", "--compiler", "--std", "--optim", "--lib"',
-        },
-        {
-          name: 'ping',
-          value: '"@chi-bot ping" the bot to ensure it is online.',
-        },
-        {
-          name: 'uwu',
-          value: '"@chi-bot uwu" the bot in order to get an uwu back.',
-        },
-      );
+    let embed;
+
+    if (process.env.MINIMAL != '1') {
+      embed = new discord.MessageEmbed()
+        .setColor('#C700BB')
+        .setTitle('Help')
+        .setDescription(
+          'Hello! Welcome to Chi-Bot, your one stop shop for code integrations through discord!\n' +
+            'For things that take input as code, it expects to be called like: "@chi-bot <action (e.g. "compile")> <args (e.g. --language "blah"> \\`\\`\\` my code \\`\\`\\`."\n' +
+            'Feel free to ping Mythra#1337 if you have any questions! She is okay with it!',
+        )
+        .addFields(
+          {
+            name: 'compile',
+            value:
+              'Take code, and see the compiled output. Possible arguments are "--compiler-args", "--libraries", "--language", and "--compiler"',
+          },
+          {
+            name: 'bench',
+            value:
+              'Take C/C++ code, and run the benchmarks with google benchmark. Possible arguments are: "--language", "--compiler", "--std", "--optim", "--lib"',
+          },
+          {
+            name: 'ping',
+            value: '"@chi-bot ping" the bot to ensure it is online.',
+          },
+          {
+            name: 'uwu',
+            value: '"@chi-bot uwu" the bot in order to get an uwu back.',
+          },
+        );
+    } else {
+      embed = new discord.MessageEmbed()
+        .setColor('#C700BB')
+        .setTitle('Help')
+        .setDescription(
+          'Hello! Welcome to Chi-Bot, your one stop shop for code integrations through discord!\n' +
+            'For things that take input as code, it expects to be called like: "@chi-bot <action (e.g. "compile")> <args (e.g. --language "blah"> \\`\\`\\` my code \\`\\`\\`."\n' +
+            'Feel free to ping Mythra#1337 if you have any questions! She is okay with it!',
+        )
+        .addFields(
+          {
+            name: 'compile',
+            value:
+              'Take code, and see the compiled output. Possible arguments are "--compiler-args", "--libraries", "--language", and "--compiler"',
+          },
+          {
+            name: 'bench',
+            value:
+              'Take C/C++ code, and run the benchmarks with google benchmark. Possible arguments are: "--language", "--compiler", "--std", "--optim", "--lib"',
+          },
+        );
+    }
     msg.author.send(embed);
     msg.channel.send('Help has been sent to you in DM.');
   }
