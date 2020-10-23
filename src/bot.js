@@ -3,8 +3,13 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 
+const CompilerExplorerClient = require('./clients/compiler-explorer.js')
+  .CompilerExplorerClient;
+const ceClient = new CompilerExplorerClient();
+
 const CompilerExplorerCommand = require('./command/compiler-explorer.js')
   .command;
+const RunCommand = require('./command/run-command.js').command;
 const HelpCommand = require('./command/help.js').command;
 const PingCommand = require('./command/ping-command.js').command;
 const QuickBenchCommand = require('./command/quick-bench.js').command;
@@ -13,17 +18,19 @@ const UwuCommand = require('./command/uwu-command.js').command;
 let activeCommands;
 if (process.env.MINIMAL == '1') {
   activeCommands = [
-    new CompilerExplorerCommand(client),
+    new CompilerExplorerCommand(client, ceClient),
+    new RunCommand(client, ceClient),
+    new HelpCommand(client),
+    new QuickBenchCommand(client),
+  ];
+} else {
+  activeCommands = [
+    new CompilerExplorerCommand(client, ceClient),
+    new RunCommand(client, ceClient),
     new HelpCommand(client),
     new PingCommand(client),
     new QuickBenchCommand(client),
     new UwuCommand(client),
-  ];
-} else {
-  activeCommands = [
-    new CompilerExplorerCommand(client),
-    new HelpCommand(client),
-    new QuickBenchCommand(client),
   ];
 }
 

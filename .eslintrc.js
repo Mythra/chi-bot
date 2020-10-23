@@ -20,5 +20,9 @@ module.exports = {
     'max-len': 'off',
     // Prettier.
     'object-curly-spacing': 'off',
+    // Prettier.
+    'operator-linebreak': 'off',
+    // Prettier.
+    'quotes': 'off',
   },
 };

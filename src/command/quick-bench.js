@@ -28,7 +28,7 @@ class QuickBenchCommand extends Command {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'User-Agent': 'Chi-Bot/1.0.0 DiscordBot SecurityInsanity',
+        'User-Agent': 'Chi-Bot/1.0.0 DiscordBot Mythra',
       },
     });
 

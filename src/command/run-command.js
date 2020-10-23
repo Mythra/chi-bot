@@ -1,23 +1,21 @@
 const Command = require('./command.js').Command;
 
 /**
- * A discord command responsible for reaching out to compiler explorer,
- * and compiling user provided code. It will spit back out the output of the
- * compiled code.
+ * A command to only run code, and not give any bench/compiler output.
  */
-class CompilerExplorerCommand extends Command {
+class RunCommand extends Command {
   /**
-   * Construct this command.
+   * Create an instance of this uwu command.
    *
    * @param {Discord.Client} client
-   *  The discord client to use.
+   *  The discord client instance.
    * @param {CompilerExplorerClient} ceClient
    *  The compiler explorer client.
    */
   constructor(client, ceClient) {
     super({
       client,
-      prefix: 'compile',
+      prefix: 'run',
       prefixNeedsAfter: true,
     });
 
@@ -25,10 +23,10 @@ class CompilerExplorerCommand extends Command {
   }
 
   /**
-   * Process a message from discord.
+   * Handle a message received from discord.
    *
    * @param {Discord.Message} msg
-   *  The message to process.
+   *  The message received from discord.
    */
   async onMsg(msg) {
     const msgContent = msg.content.trim();
@@ -44,7 +42,7 @@ class CompilerExplorerCommand extends Command {
 
     const args = this.extractRawArgs(
       msgContent.substring(
-        msgContent.indexOf('> compile') + '> compile'.length,
+        msgContent.indexOf('> run') + '> run'.length,
         msgContent.indexOf('```'),
       ),
     );
@@ -96,8 +94,8 @@ class CompilerExplorerCommand extends Command {
         args,
         languagesSupported[langTag],
         compiler,
-        true,
         false,
+        true,
         msg,
       );
     } catch (err) {
@@ -109,5 +107,5 @@ class CompilerExplorerCommand extends Command {
 }
 
 module.exports = {
-  command: CompilerExplorerCommand,
+  command: RunCommand,
 };
