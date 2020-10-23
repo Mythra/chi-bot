@@ -479,7 +479,7 @@ class CompilerExplorerClient {
 
         // Send as part of msg string.
         if (shownItem.id == 'compile') {
-          const stringData = `Your code has been compiled too:\n\`\`\`x86asm\n${shownItem.data}\n\`\`\`.`;
+          const stringData = `Your code has been compiled to:\n\`\`\`x86asm\n${shownItem.data}\n\`\`\`.`;
           if (msgString == '') {
             msgString = stringData;
           } else {
@@ -508,7 +508,7 @@ class CompilerExplorerClient {
 
     if (msgString == '') {
       msgString =
-        "Your code was compiled successfully! The outputs were too large so we've attached them as files.";
+        "Your code was compiled successfully! The outputs were to large so we've attached them as files.";
     }
     msg.channel.send(msgString, msgAttachments);
   }

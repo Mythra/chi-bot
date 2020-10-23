@@ -139,7 +139,7 @@ class Command {
    * Mark a message as being processed.
    *
    * @param {Discord.Message} msg
-   *  The discord message to react too.
+   *  The discord message to react to.
    */
   _markWaiting(msg) {
     msg.react('🕒');
