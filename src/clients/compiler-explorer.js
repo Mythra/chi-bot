@@ -325,13 +325,11 @@ class CompilerExplorerClient {
       `/compiler/${compiler}/compile`,
       {
         source: codeAsText,
+        compiler: compiler,
+        lang: languageID,
         options: {
           userArguments: compilerArgs,
-          compilerOptions: showRunOutput
-            ? {
-                executorRequest: true,
-              }
-            : {},
+          compilerOptions: {},
           executeParameters: showRunOutput
             ? {
                 args: runArgs,
@@ -388,7 +386,7 @@ class CompilerExplorerClient {
     }
 
     const toShowItems = [];
-    if (showCompileOutput) {
+    if (showCompileOutput && asmInstructions != null) {
       let compiledAsmString = '';
       let compiledAsmLines = 0;
       for (let idx = 0; idx < asmInstructions.length; ++idx) {
@@ -417,16 +415,16 @@ class CompilerExplorerClient {
       let runStderr = '';
       let runStderrLines = 0;
 
-      if (compilerData['stdout'] != null) {
-        for (let idx = 0; idx < compilerData['stdout'].length; ++idx) {
-          runStdout += compilerData['stdout'][idx].text;
+      if (compilerData['execResult']['stdout'] != null) {
+        for (let idx = 0; idx < compilerData['execResult']['stdout'].length; ++idx) {
+          runStdout += compilerData['execResult']['stdout'][idx].text;
           runStdout += '\n';
           runStdoutLines++;
         }
       }
-      if (compilerData['stderr'] != null) {
-        for (let idx = 0; idx < compilerData['stderr'].length; ++idx) {
-          runStderr += compilerData['stderr'][idx].text;
+      if (compilerData['execResult']['stderr'] != null) {
+        for (let idx = 0; idx < compilerData['execResult']['stderr'].length; ++idx) {
+          runStderr += compilerData['execResult']['stderr'][idx].text;
           runStderr += '\n';
           runStderrLines++;
         }
