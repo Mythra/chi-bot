@@ -416,14 +416,22 @@ class CompilerExplorerClient {
       let runStderrLines = 0;
 
       if (compilerData['execResult']['stdout'] != null) {
-        for (let idx = 0; idx < compilerData['execResult']['stdout'].length; ++idx) {
+        for (
+          let idx = 0;
+          idx < compilerData['execResult']['stdout'].length;
+          ++idx
+        ) {
           runStdout += compilerData['execResult']['stdout'][idx].text;
           runStdout += '\n';
           runStdoutLines++;
         }
       }
       if (compilerData['execResult']['stderr'] != null) {
-        for (let idx = 0; idx < compilerData['execResult']['stderr'].length; ++idx) {
+        for (
+          let idx = 0;
+          idx < compilerData['execResult']['stderr'].length;
+          ++idx
+        ) {
           runStderr += compilerData['execResult']['stderr'][idx].text;
           runStderr += '\n';
           runStderrLines++;

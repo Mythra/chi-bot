@@ -34,12 +34,17 @@ if (process.env.MINIMAL == '1') {
   ];
 }
 
+const makeBottom = require('./command/make-bottom.js').dg;
+
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
 });
 client.on('message', msg => {
   if (msg.author.bot) {
     return;
+  }
+  if (process.env.ENFORCE_BOTTOM) {
+    (async () => await makeBottom(msg))();
   }
   for (let idx = 0; idx < activeCommands.length; ++idx) {
     (async () => await activeCommands[idx].onMessage(msg))();
