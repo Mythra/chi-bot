@@ -14,7 +14,7 @@
   "author": "Cynthia <cynthia@coan.dev>",
   "license": "MIT",
   "dependencies": {
-    "@textlint/markdown-to-ast": "^6.3.4",
+    "@textlint/markdown-to-ast": "^12.2.2",
     "axios": "^0.21.2",
     "bufferutil": "^4.0.3",
     "canvas": "^2.7.0",
